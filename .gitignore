@@ -166,3 +166,10 @@ cython_debug/
 
 # JupyterBook
 _build/
+
+# Secrets
+*.secret
+*.pid
+*.sqlite
+
+

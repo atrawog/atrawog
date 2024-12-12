@@ -20,6 +20,10 @@ RUN pacman -Syu --noconfirm && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
+#RUN echo "auth       required     pam_unix.so" > /etc/pam.d/jupyter && \
+#    echo "account    required     pam_unix.so" >> /etc/pam.d/jupyter
+    
+
 USER ${USERNAME}
 WORKDIR ${HOME}
 
@@ -51,4 +55,6 @@ WORKDIR /workspace
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["pixi", "shell", "--no-install"]
 EXPOSE 8888
+EXPOSE 8000
 USER ${USERNAME}
+

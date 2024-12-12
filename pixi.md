@@ -6,3 +6,8 @@ pixi task add jupyterlab  -- "python -m jupyter lab"
 pixi shell
 
 jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token=''
+
+sudo passwd jovyan
+jupyter server --ip=0.0.0.0 --port=8888 --no-browser --config  /workspace/jupyter_server_config.py
+jupyterhub --generate-config --config  /workspace/jupyterhub_config.py
+jupyterhub --config  /workspace/jupyterhub_config.py
