@@ -4,3 +4,5 @@ pixi add --pypi vllm mistral mistral_common
 pixi add --pypi torch torchvision torchaudio transformers accelerate sentencepiece huggingface_hub sentencepiece bitsandbytes
 pixi task add jupyterlab  -- "python -m jupyter lab"
 pixi shell
+
+jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token=''

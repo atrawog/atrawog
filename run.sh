@@ -11,9 +11,12 @@ fi
 
 # Run the Docker container with the specified mounts
 docker run -it --rm \
+  -p 8888:8888 \
   -e SSH_AUTH_SOCK=/ssh-agent \
   -v "$SSH_AUTH_SOCK":/ssh-agent \
   -v "$(pwd)":/workspace \
+  -v "/media":/media \
+  -v "/sync":/sync \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /dev/kvm:/dev/kvm \
   "$IMAGE_NAME"

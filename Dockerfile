@@ -14,7 +14,7 @@ ENV HOME=/home/${USERNAME}
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm base-devel git vim sudo opentofu iotop htop openssh curl \
     libvirt wget sysstat docker docker-buildx docker-compose qemu-base iproute2 \
-    cuda cudnn gocryptfs sshfs fuse3 linux linux-headers minikube pixi && \
+    cuda cudnn gocryptfs sshfs fuse3 linux linux-headers minikube pixi supervisor && \
     groupadd --gid ${USER_GID} ${USERNAME} && \
     useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
@@ -42,12 +42,13 @@ USER root
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-RUN mkdir -p /media
+RUN mkdir -p /{media,sync,workspace} && \
+    chown -R ${USERNAME}:${USERNAME} /{media,sync,workspace}
 # Set working directory and entrypoint script
 WORKDIR /workspace
 
 # Set entrypoint and default command
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["pixi", "shell", "--no-install"]
-
+EXPOSE 8888
 USER ${USERNAME}
