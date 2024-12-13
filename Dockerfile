@@ -20,9 +20,6 @@ RUN pacman -Syu --noconfirm && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
-#RUN echo "auth       required     pam_unix.so" > /etc/pam.d/jupyter && \
-#    echo "account    required     pam_unix.so" >> /etc/pam.d/jupyter
-    
 
 USER ${USERNAME}
 WORKDIR ${HOME}
@@ -45,6 +42,8 @@ USER root
 # Copy entrypoint script and set executable permissions
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+COPY jupyter.ini /etc/supervisor.d/jupyter.ini
 
 RUN mkdir -p /{media,sync,workspace} && \
     chown -R ${USERNAME}:${USERNAME} /{media,sync,workspace}
