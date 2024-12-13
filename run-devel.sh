@@ -1,7 +1,11 @@
 #!/bin/bash
 
+set -a
+source config.env
+set +a
+
 # Define variables
-IMAGE_NAME="atrawog/atrawog:latest"
+IMAGE_NAME=${DOCKER_USERNAME}/${IMAGE_DEVEL}:latest
 
 # Ensure SSH_AUTH_SOCK is set
 if [ -z "$SSH_AUTH_SOCK" ]; then

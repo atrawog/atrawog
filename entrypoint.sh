@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values if not provided
-USER=${USER:-jovyan}
+USER=${USERNAME:-jovyan}
 LOCAL_UID=${LOCAL_UID:-1000}
 LOCAL_GID=${LOCAL_GID:-1000}
 LOCAL_DOCKER_GID=${LOCAL_DOCKER_GID:-954}

@@ -1,21 +1,21 @@
 # Use Arch Linux as base image
-FROM archlinux:latest
+ARG BASE_IMAGE=archlinux
+ARG BASE_VERSION=base-devel
+FROM ${BASE_IMAGE}:${BASE_VERSION}
 
 # Arguments for default UID/GID and username
 ARG USERNAME=jovyan
 ARG USER_UID=1000
 ARG USER_GID=1000
 ARG PIXI_VERSION=0.39.2
-
+ARG ARCH_PACKAGES=""
 # Set environment variables for the user
 ENV USERNAME=${USERNAME}
 ENV HOME=/home/${USERNAME}
 
 # Install base development tools, sudo, pixi, and other dependencies
-RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm base-devel git vim sudo opentofu iotop htop openssh curl \
-    libvirt wget sysstat docker docker-buildx docker-compose qemu-base iproute2 \
-    cuda cudnn gocryptfs sshfs fuse3 linux linux-headers minikube supervisor && \
+RUN pacman -Syu --noconfirm ${ARCH_PACKAGES} && \
+    pacman -Scc --noconfirm && \
     groupadd --gid ${USER_GID} ${USERNAME} && \
     useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
