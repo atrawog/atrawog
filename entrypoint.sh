@@ -30,5 +30,8 @@ fi
 # Add user to docker group
 sudo usermod -aG docker $USER
 
+#Start supervisord
+sudo supervisord -c "/etc/supervisord.conf"
+
 # Switch to non-root user and start bash or specified command
 exec sudo -u $USER -H "$@"

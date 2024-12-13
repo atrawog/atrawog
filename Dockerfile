@@ -5,6 +5,7 @@ FROM archlinux:latest
 ARG USERNAME=jovyan
 ARG USER_UID=1000
 ARG USER_GID=1000
+ARG PIXI_VERSION=0.39.2
 
 # Set environment variables for the user
 ENV USERNAME=${USERNAME}
@@ -14,12 +15,15 @@ ENV HOME=/home/${USERNAME}
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm base-devel git vim sudo opentofu iotop htop openssh curl \
     libvirt wget sysstat docker docker-buildx docker-compose qemu-base iproute2 \
-    cuda cudnn gocryptfs sshfs fuse3 linux linux-headers minikube pixi supervisor && \
+    cuda cudnn gocryptfs sshfs fuse3 linux linux-headers minikube supervisor && \
     groupadd --gid ${USER_GID} ${USERNAME} && \
     useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
+RUN curl -Ls \
+    "https://github.com/prefix-dev/pixi/releases/download/v${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
+    -o /usr/local/bin/pixi && chmod +x /usr/local/bin/pixi
 
 USER ${USERNAME}
 WORKDIR ${HOME}
@@ -34,7 +38,7 @@ RUN mkdir -p ${HOME}/.config/libvirt && \
     echo 'uri_default = "qemu:///system"' | tee ${HOME}/.config/libvirt/libvirt.conf
 
 # Enable Pixi autocompletion
-RUN echo 'eval "$(pixi completion --shell bash)"' >> ${HOME}/.bashrc
+# RUN echo 'eval "$(pixi completion --shell bash)"' >> ${HOME}/.bashrc
 
 # Switch back to root to copy and set permissions on entrypoint script
 USER root

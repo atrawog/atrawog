@@ -15,6 +15,9 @@ c.Spawner.debug = True
 c.Spawner.args = [
     '--NotebookApp.cookie_secret_file=/workspace/jupyterhub_cookie.secret'
 ]
+c.LabApp.disable_check_for_updates = True
+
+
 #------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration
 #------------------------------------------------------------------------------
