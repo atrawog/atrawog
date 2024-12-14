@@ -172,4 +172,7 @@ _build/
 *.pid
 *.sqlite
 
+# Testing
+testing/*
+
 

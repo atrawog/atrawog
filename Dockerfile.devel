@@ -8,13 +8,23 @@ ARG USERNAME=atrawog
 ARG USER_UID=1000
 ARG USER_GID=1000
 ARG PIXI_VERSION=0.39.2
-ARG ARCH_PACKAGES=""
+ARG ARCH_BASE=""
+ARG ARCH_AI=""
+ARG ARCH_EXTRA=""
+ARG ARCH_TESTING=""
+
 # Set environment variables for the user
 ENV USERNAME=${USERNAME}
 ENV HOME=/home/${USERNAME}
 
 # Install base development tools, sudo, pixi, and other dependencies
-RUN pacman -Syu --noconfirm ${ARCH_PACKAGES} && \
+RUN pacman -Syu --noconfirm ${ARCH_BASE} && \
+    pacman -Scc --noconfirm
+RUN pacman -Syu --noconfirm ${ARCH_EXTRA} && \
+    pacman -Scc --noconfirm
+RUN pacman -Syu --noconfirm ${ARCH_AI} && \
+    pacman -Scc --noconfirm
+RUN pacman -Syu --noconfirm ${ARCH_TESTING} && \
     pacman -Scc --noconfirm
 RUN groupadd --gid ${USER_GID} ${USERNAME} && \
     useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
@@ -44,19 +54,21 @@ RUN mkdir -p ${HOME}/.config/libvirt && \
 USER root
 
 # Copy entrypoint script and set executable permissions
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-COPY jupyter.ini /etc/supervisor.d/jupyter.ini
+# COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+# RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN mkdir -p /{media,sync,workspace} && \
     chown -R ${USERNAME}:${USERNAME} /{media,sync,workspace}
 # Set working directory and entrypoint script
 WORKDIR /workspace
 
+COPY config/supervisord/supervisord.conf /etc/supervisord.conf
+COPY config/supervisord/jupyter.ini /etc/supervisor.d/jupyter.ini
+
 # Set entrypoint and default command
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["pixi", "shell", "--no-install"]
+# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# CMD ["pixi", "shell", "--no-install"]
+CMD ["sudo", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
 EXPOSE 8888
 EXPOSE 8000
 USER ${USERNAME}

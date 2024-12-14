@@ -2,7 +2,7 @@
 
 c = get_config() 
 c.JupyterHub.authenticator_class = 'pam'
-c.Authenticator.allowed_users = {'jovyan'}
+c.Authenticator.allowed_users = {'atrawog'}
 c.Spawner.default_url = '/lab'
 c.JupyterHub.bind_url = 'http://:8000'
 c.Spawner.notebook_dir = '/workspace'

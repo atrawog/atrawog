@@ -24,7 +24,8 @@ else
 fi
 
 # Run the Docker container with the specified mounts
-docker run -it --rm \
+docker run -d \
+  --restart ${DOCKER_RESTART} \
   -p 8000:8000 \
   -p 8888:8888 \
   -e SSH_AUTH_SOCK=/ssh-agent \
@@ -34,4 +35,5 @@ docker run -it --rm \
   -v "/sync":/sync \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /dev/kvm:/dev/kvm \
+  --name ${IMAGE_DEVEL} \
   "$IMAGE_NAME"
