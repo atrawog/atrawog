@@ -1,7 +1,19 @@
 #!/bin/bash
+# set -euxo pipefail
 
-# Default values if not provided
-USER=${USERNAME:-jovyan}
+# Load environment variables from config.env file
+set -a
+if [[ -f config.env ]]; then
+  source config.env
+fi
+
+if [[ -f config.secrets ]]; then
+  source config.env
+fi
+set +a
+
+
+USER=${USERNAME:-atrawog}
 LOCAL_UID=${LOCAL_UID:-1000}
 LOCAL_GID=${LOCAL_GID:-1000}
 LOCAL_DOCKER_GID=${LOCAL_DOCKER_GID:-954}
@@ -30,8 +42,17 @@ fi
 # Add user to docker group
 sudo usermod -aG docker $USER
 
-#Start supervisord
-sudo supervisord -c "/etc/supervisord.conf"
+if ! pgrep -x supervisord > /dev/null; then
+    echo "Starting supervisord..."
+    sudo supervisord -c "/etc/supervisord.conf"
+else
+    echo "supervisord is already running."
+fi
+
+git config --global user.name $GIT_USERNAME
+git config --global user.email $GIT_EMAIL
+
 
 # Switch to non-root user and start bash or specified command
-exec sudo -u $USER -H "$@"
+# exec sudo -u $USER -H "$@"
+exec sudo -u $USER -H /usr/local/bin/pixi shell --no-install
