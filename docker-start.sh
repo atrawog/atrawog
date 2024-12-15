@@ -25,6 +25,7 @@ fi
 
 # Run the Docker container with the specified mounts
 docker run -d \
+  --env-file config.env \
   --restart ${DOCKER_RESTART} \
   -p 8000:8000 \
   -p 8888:8888 \

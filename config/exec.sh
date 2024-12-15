@@ -1,17 +1,12 @@
 #!/bin/bash
 # set -euxo pipefail
+# set -x
 
 # Load environment variables from config.env file
 set -a
 if [[ -f config.env ]]; then
   source config.env
 fi
-
-if [[ -f config.secrets ]]; then
-  source config.env
-fi
-set +a
-
 
 USER=${USERNAME:-atrawog}
 LOCAL_UID=${LOCAL_UID:-1000}
@@ -29,7 +24,7 @@ if [ $(id -u $USER) -ne $LOCAL_UID ] || [ $(id -g $USER) -ne $LOCAL_GID ]; then
     sudo usermod -u $LOCAL_UID -g $LOCAL_GID $USER
     
     # Fix ownership of home directory and workspace folder
-    sudo chown -R $LOCAL_UID:$LOCAL_GID /home/$USER /workspace
+    sudo chown -R $LOCAL_UID:$LOCAL_GID /home/$USER
 fi
 
 # Change docker group GID and set permissions on /var/run/docker.sock
@@ -42,17 +37,5 @@ fi
 # Add user to docker group
 sudo usermod -aG docker $USER
 
-if ! pgrep -x supervisord > /dev/null; then
-    echo "Starting supervisord..."
-    sudo supervisord -c "/etc/supervisord.conf"
-else
-    echo "supervisord is already running."
-fi
 
-git config --global user.name $GIT_USERNAME
-git config --global user.email $GIT_EMAIL
-
-
-# Switch to non-root user and start bash or specified command
-# exec sudo -u $USER -H "$@"
 exec sudo -u $USER -H /usr/local/bin/pixi shell --no-install

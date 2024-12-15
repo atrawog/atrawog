@@ -3,19 +3,12 @@ ARG BASE_IMAGE=archlinux
 ARG BASE_VERSION=base-devel
 FROM ${BASE_IMAGE}:${BASE_VERSION}
 
-# Arguments for default UID/GID and username
-ARG USERNAME=atrawog
-ARG USER_UID=1000
-ARG USER_GID=1000
-ARG PIXI_VERSION=0.39.2
+
 ARG ARCH_BASE=""
 ARG ARCH_AI=""
 ARG ARCH_EXTRA=""
 ARG ARCH_TESTING=""
 
-# Set environment variables for the user
-ENV USERNAME=${USERNAME}
-ENV HOME=/home/${USERNAME}
 
 # Install base development tools, sudo, pixi, and other dependencies
 RUN pacman -Syu --noconfirm ${ARCH_BASE} && \
@@ -26,50 +19,48 @@ RUN pacman -Syu --noconfirm ${ARCH_AI} && \
     pacman -Scc --noconfirm
 RUN pacman -Syu --noconfirm ${ARCH_TESTING} && \
     pacman -Scc --noconfirm
+
+ARG PIXI_VERSION=0.39.2    
+RUN curl -Ls \
+    "https://github.com/prefix-dev/pixi/releases/download/v${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
+    -o /usr/local/bin/pixi && chmod +x /usr/local/bin/pixi
+
+ARG USERNAME=atrawog
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+ENV USERNAME=${USERNAME}
+ENV HOME=/home/${USERNAME}
+
 RUN groupadd --gid ${USER_GID} ${USERNAME} && \
     useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
-RUN curl -Ls \
-    "https://github.com/prefix-dev/pixi/releases/download/v${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
-    -o /usr/local/bin/pixi && chmod +x /usr/local/bin/pixi
+
+RUN mkdir -p /{media,sync,workspace} && \
+    chown -R ${USERNAME}:${USERNAME} /{media,sync,workspace}
+
+COPY config/supervisord.conf /etc/supervisord.conf
+COPY config/*.ini /etc/supervisor.d/
+COPY config/*.sh /usr/local/bin/
+
+CMD ["sudo", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+
+EXPOSE 8888
+EXPOSE 8000
 
 USER ${USERNAME}
 WORKDIR ${HOME}
 
-# Install yay (AUR helper)
-RUN git clone https://aur.archlinux.org/yay.git && \
-    cd yay && \
-    makepkg -si --noconfirm && \
-    cd .. && rm -rf yay
+# RUN git clone https://aur.archlinux.org/yay.git && \
+#     cd yay && \
+#     makepkg -si --noconfirm && \
+#     cd .. && rm -rf yay
 
-RUN mkdir -p ${HOME}/.config/libvirt && \
-    echo 'uri_default = "qemu:///system"' | tee ${HOME}/.config/libvirt/libvirt.conf
+# RUN mkdir -p ${HOME}/.config/libvirt && \
+#     echo 'uri_default = "qemu:///system"' | tee ${HOME}/.config/libvirt/libvirt.conf
 
-# Enable Pixi autocompletion
-# RUN echo 'eval "$(pixi completion --shell bash)"' >> ${HOME}/.bashrc
-
-# Switch back to root to copy and set permissions on entrypoint script
-USER root
-
-# Copy entrypoint script and set executable permissions
-# COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-# RUN chmod +x /usr/local/bin/entrypoint.sh
-
-RUN mkdir -p /{media,sync,workspace} && \
-    chown -R ${USERNAME}:${USERNAME} /{media,sync,workspace}
-# Set working directory and entrypoint script
 WORKDIR /workspace
 
-COPY config/supervisord/supervisord.conf /etc/supervisord.conf
-COPY config/supervisord/jupyter.ini /etc/supervisor.d/jupyter.ini
-
-# Set entrypoint and default command
-# ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-# CMD ["pixi", "shell", "--no-install"]
-CMD ["sudo", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
-EXPOSE 8888
-EXPOSE 8000
-USER ${USERNAME}
 
