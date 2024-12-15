@@ -25,7 +25,7 @@
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
         "source=/sync,target=/sync,type=bind"
     ],
-    "postCreateCommand": "/workspace/entrypoint.sh",
+    "postCreateCommand": "/workspace/config/exec.sh",
     "updateRemoteUserUID": true,
     "remoteEnv": {
         "SSH_AUTH_SOCK": "/ssh-agent"
