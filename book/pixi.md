@@ -7,7 +7,7 @@ pixi task remove jupyterlab
 pixi task add jupyterlab  -- "python -m jupyter lab --ip=0.0.0.0 --port=8888 --no-browser"
 
 pixi task remove jupyterhub 
-pixi task add jupyterhub  -- "python -m jupyterhub --config  /workspace/jupyterhub_config.py"
+pixi task add jupyterhub  -- "python -m jupyterhub --config  /workspace/config/jupyterhub_config.py"
 
 pixi task remove passwd
 pixi task add passwd -- bash -c 'echo "Setting password for \$USER"; sudo passwd \$USER'

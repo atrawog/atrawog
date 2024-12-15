@@ -28,8 +28,6 @@ docker run -d \
   --env-file config.env \
   --restart ${DOCKER_RESTART} \
   -p 8000:8000 \
-  -p 8888:8888 \
-  -e SSH_AUTH_SOCK=/ssh-agent \
   -v "$SSH_AUTH_SOCK":/ssh-agent \
   -v "$(pwd)":/workspace \
   -v "/media":/media \

@@ -54,7 +54,7 @@ bitsandbytes = ">=0.45.0, <0.46"
 
 [tasks]
 jupyterlab = "python -m jupyter lab --ip=0.0.0.0 --port=8888 --no-browser"
-jupyterhub = "python -m jupyterhub --config /workspace/jupyterhub_config.py"
+jupyterhub = "python -m jupyterhub --config  /workspace/config/jupyterhub_config.py"
 
 
 
