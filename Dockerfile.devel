@@ -35,6 +35,7 @@ ENV HOME=/home/${USERNAME}
 RUN groupadd --gid ${USER_GID} ${USERNAME} && \
     useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
+#    echo 'Defaults env_keep += "*"' | tee /etc/sudoers.d/${USERNAME} && \
     chmod 0440 /etc/sudoers.d/${USERNAME}
 
 
@@ -62,5 +63,3 @@ WORKDIR ${HOME}
 #     echo 'uri_default = "qemu:///system"' | tee ${HOME}/.config/libvirt/libvirt.conf
 
 WORKDIR /workspace
-
-
