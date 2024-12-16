@@ -1,2 +1,1 @@
-# Use Arch Linux as base image
-FROM atrawog/atrawog-devel:latest
+FROM atrawog/atrawog-devel:20241216.0021

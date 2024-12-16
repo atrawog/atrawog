@@ -7,6 +7,10 @@ set +a
 TIMESTAMP=$(date '+%Y%m%d.%H%M')
 IMAGE_NAME=${DOCKER_USERNAME}/${IMAGE_DEVEL}
 
+./docker-prune.sh
+
+echo  "FROM ${IMAGE_NAME}:${TIMESTAMP}" > .devcontainer/Dockerfile 
+
 # Build the Docker image and tag it with 'latest' and the current timestamp
 docker build \
     --build-arg BASE_IMAGE=${BASE_IMAGE} \
