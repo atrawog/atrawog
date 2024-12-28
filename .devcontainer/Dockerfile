@@ -1,1 +1,1 @@
-FROM atrawog/atrawog-devel:20241216.0021
+FROM atrawog/atrawog-devel:20241216.1025

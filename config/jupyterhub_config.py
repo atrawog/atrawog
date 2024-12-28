@@ -5,7 +5,7 @@ c.JupyterHub.authenticator_class = 'pam'
 c.Authenticator.allowed_users = {'atrawog'}
 c.Spawner.default_url = '/lab'
 c.JupyterHub.bind_url = 'http://:8000'
-c.Spawner.notebook_dir = '/workspace'
+c.Spawner.notebook_dir = '/workspace/book'
 c.JupyterHub.cookie_secret_file = '/workspace/jupyterhub_cookie.secret'
 c.Spawner.args = ['--NotebookApp.token=""', '--NotebookApp.disable_check_xsrf=True']
 c.NotebookApp.allow_origin = '*'

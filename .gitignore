@@ -175,4 +175,7 @@ _build/
 # Testing
 testing/*
 
+# Syncthing
+.stfolder/
+
 
