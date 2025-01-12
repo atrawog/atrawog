@@ -1,0 +1,63 @@
+# Use Arch Linux as base image
+ARG BASE_IMAGE=archlinux
+ARG BASE_VERSION=base-devel
+FROM ${BASE_IMAGE}:${BASE_VERSION}
+
+ARG ARCH_BASE=""
+ARG ARCH_AI=""
+ARG ARCH_EXTRA=""
+ARG ARCH_TESTING=""
+
+# Install base development tools, sudo, pixi, and other dependencies
+RUN pacman -Syu --noconfirm ${ARCH_BASE} && \
+    pacman -Scc --noconfirm
+RUN pacman -Syu --noconfirm ${ARCH_EXTRA} && \
+    pacman -Scc --noconfirm
+RUN pacman -Syu --noconfirm ${ARCH_AI} && \
+    pacman -Scc --noconfirm
+RUN pacman -Syu --noconfirm ${ARCH_TESTING} && \
+    pacman -Scc --noconfirm
+
+ARG PIXI_VERSION=0.39.2    
+RUN curl -Ls \
+    "https://github.com/prefix-dev/pixi/releases/download/v${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
+    -o /usr/local/bin/pixi && chmod +x /usr/local/bin/pixi
+
+ARG USERNAME=atrawog
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+ENV USERNAME=${USERNAME}
+ENV HOME=/home/${USERNAME}
+
+RUN groupadd --gid ${USER_GID} ${USERNAME} && \
+    useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
+    echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
+#    echo 'Defaults env_keep += "*"' | tee /etc/sudoers.d/${USERNAME} && \
+    chmod 0440 /etc/sudoers.d/${USERNAME}
+
+
+RUN mkdir -p /{media,sync,workspace} && \
+    chown -R ${USERNAME}:${USERNAME} /{media,sync,workspace}
+
+COPY config/supervisord.conf /etc/supervisord.conf
+COPY config/*.ini /etc/supervisor.d/
+COPY config/*.sh /usr/local/bin/
+
+CMD ["sudo", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+
+EXPOSE 8888
+EXPOSE 8000
+
+USER ${USERNAME}
+WORKDIR ${HOME}
+
+# RUN git clone https://aur.archlinux.org/yay.git && \
+#     cd yay && \
+#     makepkg -si --noconfirm && \
+#     cd .. && rm -rf yay
+
+# RUN mkdir -p ${HOME}/.config/libvirt && \
+#     echo 'uri_default = "qemu:///system"' | tee ${HOME}/.config/libvirt/libvirt.conf
+
+WORKDIR /workspace
