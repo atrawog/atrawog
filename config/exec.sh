@@ -10,4 +10,6 @@ fi
 
 cd /workspace
 /usr/local/bin/fixpermission.sh
+/usr/local/bin/setpassword.sh
+sudo /usr/sbin/supervisord -c /etc/supervisord.conf > /dev/null 2>&1 &
 exec sudo -u $USER_NAME -H /usr/local/bin/pixi shell --no-install

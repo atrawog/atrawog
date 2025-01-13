@@ -171,5 +171,7 @@ cython_debug/
 .pypirc
 
 # Config
-
 config.env
+
+# Jupyter
+*.secret

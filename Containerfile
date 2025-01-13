@@ -44,20 +44,17 @@ COPY config/supervisord.conf /etc/supervisord.conf
 COPY config/*.ini /etc/supervisor.d/
 COPY config/*.sh /usr/local/bin/
 
-CMD ["sudo", "/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
-
 EXPOSE 8888
 EXPOSE 8000
 
 USER ${USERNAME}
 WORKDIR ${HOME}
 
-# RUN git clone https://aur.archlinux.org/yay.git && \
-#     cd yay && \
-#     makepkg -si --noconfirm && \
-#     cd .. && rm -rf yay
-
-# RUN mkdir -p ${HOME}/.config/libvirt && \
-#     echo 'uri_default = "qemu:///system"' | tee ${HOME}/.config/libvirt/libvirt.conf
+RUN git clone https://aur.archlinux.org/yay.git && \
+    cd yay && \
+    makepkg -si --noconfirm && \
+    cd .. && rm -rf yay
 
 WORKDIR /workspace
+
+CMD ["/usr/local/bin/exec.sh"]
