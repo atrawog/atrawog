@@ -18,27 +18,31 @@ RUN pacman -Syu --noconfirm ${ARCH_AI} && \
 RUN pacman -Syu --noconfirm ${ARCH_TESTING} && \
     pacman -Scc --noconfirm
 
-ARG PIXI_VERSION=0.39.2    
+ARG PIXI_VERSION=v0.40.0   
 RUN curl -Ls \
-    "https://github.com/prefix-dev/pixi/releases/download/v${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
+    "https://github.com/prefix-dev/pixi/releases/download/${PIXI_VERSION}/pixi-$(uname -m)-unknown-linux-musl" \
     -o /usr/local/bin/pixi && chmod +x /usr/local/bin/pixi
 
-ARG USERNAME=atrawog
+ARG USER_NAME=atrawog
 ARG USER_UID=1000
 ARG USER_GID=1000
 
-ENV USERNAME=${USERNAME}
-ENV HOME=/home/${USERNAME}
+ENV USER_NAME=${USER_NAME}
+ENV USER_UID=${USER_UID}
+ENV USER_GID=${USER_GID}
+ENV HOME=/home/${USER_NAME}
 
-RUN groupadd --gid ${USER_GID} ${USERNAME} && \
-    useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} && \
-    echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USERNAME} && \
-#    echo 'Defaults env_keep += "*"' | tee /etc/sudoers.d/${USERNAME} && \
-    chmod 0440 /etc/sudoers.d/${USERNAME}
+RUN groupadd --gid ${USER_GID} ${USER_NAME} && \
+    useradd --uid ${USER_UID} --gid ${USER_GID} -m ${USER_NAME} && \
+    usermod -aG wheel,docker ${USER_NAME} && \
+    echo "%wheel ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/wheel && \
+    echo 'Defaults:%wheel !env_reset' | tee -a /etc/sudoers.d/wheel && \
+    echo 'Defaults:%wheel env_keep="*"' | tee -a /etc/sudoers.d/wheel && \
+    chmod 0440 /etc/sudoers.d/wheel
 
 
 RUN mkdir -p /{media,sync,workspace} && \
-    chown -R ${USERNAME}:${USERNAME} /{media,sync,workspace}
+    chown -R ${USER_NAME}:${USER_NAME} /{media,sync,workspace}
 
 COPY config/supervisord.conf /etc/supervisord.conf
 COPY config/*.ini /etc/supervisor.d/
@@ -47,7 +51,7 @@ COPY config/*.sh /usr/local/bin/
 EXPOSE 8888
 EXPOSE 8000
 
-USER ${USERNAME}
+USER ${USER_NAME}
 WORKDIR ${HOME}
 
 RUN git clone https://aur.archlinux.org/yay.git && \
