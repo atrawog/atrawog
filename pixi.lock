@@ -270,7 +270,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/myst-nb-1.1.2-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/myst-parser-2.0.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/mystmd-1.3.20-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/narwhals-1.21.1-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/narwhals-1.22.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/nbclient-0.10.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/nbconvert-core-7.16.5-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/nbdev-2.3.34-pyhd8ed1ab_0.conda
@@ -284,7 +284,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/numpy-1.26.4-py312heda63a1_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/oauthlib-3.2.2-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/ollama-0.1.17-cuda112_hcd836c3_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/openai-1.59.6-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/openai-1.59.7-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/openjpeg-2.5.3-h5fbd93e_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/openldap-2.6.9-he970967_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/openssl-3.4.0-h7b32b05_1.conda
@@ -467,6 +467,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.6-ha6fb4c9_0.conda
       - pypi: https://files.pythonhosted.org/packages/c2/60/a585c806d6c0ec5f8149d44eb202714792802f484e6e2b1bf96b23bd2b00/accelerate-1.2.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/99/9a/f41d252bf8b0bc5969b4dce1274cd04b7ddc541de1060dd27eca680bc1b2/bitsandbytes-0.45.0-py3-none-manylinux_2_24_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/96/be/8418aab509850637683b2aff9b3b773de412187e72fbcf22ba92293b05ea/libvirt-python-10.10.0.tar.gz
       - pypi: https://files.pythonhosted.org/packages/43/e3/7d92a15f894aa0c9c4b49b8ee9ac9850d6e63b03c9c32c0367a13ae62209/mpmath-1.3.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/b9/54/dd730b32ea14ea797530a4479b2ed46a6fb250f682a9cfb997e968bf0261/networkx-3.4.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ae/71/1c91302526c45ab494c23f61c7a84aa568b8c1f9d196efa5993957faf906/nvidia_cublas_cu12-12.4.5.8-py3-none-manylinux2014_x86_64.whl
@@ -3963,6 +3964,11 @@ packages:
   purls: []
   size: 884647
   timestamp: 1729322566955
+- pypi: https://files.pythonhosted.org/packages/96/be/8418aab509850637683b2aff9b3b773de412187e72fbcf22ba92293b05ea/libvirt-python-10.10.0.tar.gz
+  name: libvirt-python
+  version: 10.10.0
+  sha256: 8acf6dcfb33a03ed92f9440cb1a0b8d3fc53fb23bba2e76ceedeb8bfb5327557
+  requires_python: '>=3.6'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/libwebp-base-1.5.0-h851e524_0.conda
   sha256: c45283fd3e90df5f0bd3dbcd31f59cdd2b001d424cf30a07223655413b158eaf
   md5: 63f790534398730f59e1b899c3644d4a
@@ -4485,17 +4491,16 @@ packages:
   - pkg:pypi/mystmd?source=hash-mapping
   size: 1914000
   timestamp: 1736527572509
-- conda: https://conda.anaconda.org/conda-forge/noarch/narwhals-1.21.1-pyhd8ed1ab_0.conda
-  sha256: 8bdaa61f5cab1676324fb056791d222a0da91dc1fe28a131256eda604e16dbd7
-  md5: 93528445fe875e84496309bb453f71b2
+- conda: https://conda.anaconda.org/conda-forge/noarch/narwhals-1.22.0-pyhd8ed1ab_0.conda
+  sha256: 898f72c5937c6e990d58b530674a1469f310582f932970d4419269671d0331ba
+  md5: 40eec8569140b855c3f765bfb7857f26
   depends:
   - python >=3.9
   license: MIT
-  license_family: MIT
   purls:
   - pkg:pypi/narwhals?source=hash-mapping
-  size: 162983
-  timestamp: 1736291902559
+  size: 169707
+  timestamp: 1736800836205
 - conda: https://conda.anaconda.org/conda-forge/noarch/nbclient-0.10.2-pyhd8ed1ab_0.conda
   sha256: a20cff739d66c2f89f413e4ba4c6f6b59c50d5c30b5f0d840c13e8c9c2df9135
   md5: 6bb0d77277061742744176ab555b723c
@@ -4815,9 +4820,9 @@ packages:
   purls: []
   size: 9718838
   timestamp: 1703034896247
-- conda: https://conda.anaconda.org/conda-forge/noarch/openai-1.59.6-pyhd8ed1ab_0.conda
-  sha256: 74eb485326bec987f1e551ae72cfaf40b28aa43ca9e80c1ed8bda210b080f5fa
-  md5: ed0620c72a93f158348b9930d43d4a77
+- conda: https://conda.anaconda.org/conda-forge/noarch/openai-1.59.7-pyhd8ed1ab_0.conda
+  sha256: eb740a5f17755a1bf1e2c9a79394f557b0aba04acb18169b8f47c32ce15f0be3
+  md5: cd1965fefc4327e40b77f563d928617d
   depends:
   - anyio >=3.5.0,<5
   - distro >=1.7.0,<2
@@ -4833,8 +4838,8 @@ packages:
   license_family: MIT
   purls:
   - pkg:pypi/openai?source=hash-mapping
-  size: 209813
-  timestamp: 1736491243661
+  size: 210216
+  timestamp: 1736799028607
 - conda: https://conda.anaconda.org/conda-forge/linux-64/openjpeg-2.5.3-h5fbd93e_0.conda
   sha256: 5bee706ea5ba453ed7fd9da7da8380dd88b865c8d30b5aaec14d2b6dd32dbc39
   md5: 9e5816bc95d285c115a3ebc2f8563564

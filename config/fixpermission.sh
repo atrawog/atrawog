@@ -7,6 +7,7 @@ set -a
 if [[ -f config.env ]]; then
   source config.env
 fi
+set +a
 
 USER_NAME=${USER_NAME:-atrawog}
 LOCAL_UID=${LOCAL_UID:-1000}
