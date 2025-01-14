@@ -4,8 +4,8 @@
 
 # Load environment variables from config.env file
 set -a
-if [[ -f config.env ]]; then
-  source config.env
+if [[ -f /workspace/config.env ]]; then
+  source /workspace/config.env
 fi
 set +a
 

@@ -6,8 +6,8 @@ cd /workspace
 
 # Load environment variables from config.env file
 set -a
-if [[ -f config.env ]]; then
-  source config.env
+if [[ -f /workspace/config.env ]]; then
+  source /workspace/config.env
   LIBVIRT_DEFAULT_URI="qemu+ssh://${USER_NAME}@${LIBVIRT_HOST}/system"
 fi
 set +a
