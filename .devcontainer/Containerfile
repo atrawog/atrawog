@@ -1,1 +1,1 @@
-FROM atrawog/atrawog:20250113.2245
+FROM atrawog/atrawog:latest

@@ -25,7 +25,6 @@ build:
         -f $CONTAINERFILE \
         -t $DOCKER_USERNAME/$DOCKER_IMAGE:latest \
         -t $DOCKER_USERNAME/$DOCKER_IMAGE:$TIMESTAMP .
-    echo "FROM $DOCKER_USERNAME/$DOCKER_IMAGE:$TIMESTAMP" > .devcontainer/$CONTAINERFILE
 
 bash:
     docker run -it $DOCKER_USERNAME/$DOCKER_IMAGE:latest bash
