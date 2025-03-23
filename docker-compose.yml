@@ -1,0 +1,53 @@
+services:
+  traefik:
+    image: traefik:latest
+    command:
+      - "--log.level=DEBUG"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entryPoint.permanent=true"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=atrawog@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      #- "--certificatesresolvers.myresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "letsencrypt:/letsencrypt"
+      - "jupyter:/workspace/.jupyter"
+    restart: unless-stopped
+
+  gurum:
+    image: ghcr.io/atrawog/guru-meditation:latest
+    env_file:
+      - config.env
+      - config-prod.env
+      - secrets.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lab.rule=Host(`lab.atrawog.org`)"
+      - "traefik.http.routers.lab.entrypoints=websecure"
+      - "traefik.http.routers.lab.tls=true"
+      - "traefik.http.routers.lab.tls.certresolver=myresolver"
+      - "traefik.http.routers.lab.service=lab"
+      - "traefik.http.services.lab.loadbalancer.server.port=8010"
+      - "traefik.http.routers.ow.rule=Host(`ow.atrawog.org`)"
+      - "traefik.http.routers.ow.entrypoints=websecure"
+      - "traefik.http.routers.ow.tls=true"
+      - "traefik.http.routers.ow.tls.certresolver=myresolver"
+      - "traefik.http.routers.ow.service=ow"
+      - "traefik.http.services.ow.loadbalancer.server.port=3000"     
+    restart: unless-stopped
+    volumes:
+      - "${PWD}:/workspace"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+volumes:
+  letsencrypt:
+  jupyter:
