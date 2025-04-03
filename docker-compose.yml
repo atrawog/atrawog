@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   gurum:
-    image: ghcr.io/atrawog/guru-meditation:latest
+    image: ghcr.io/atrawog/guru-meditation:20250403.2014
     env_file:
       - config.env
       - config-prod.env
