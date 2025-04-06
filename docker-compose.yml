@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   traefik:
     image: traefik:latest
@@ -5,6 +7,7 @@ services:
       - "--log.level=DEBUG"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=true"
+      - "--serversTransport.insecureSkipVerify=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
@@ -13,14 +16,12 @@ services:
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.email=atrawog@gmail.com"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      #- "--certificatesresolvers.myresolver.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "letsencrypt:/letsencrypt"
-      - "jupyter:/workspace/.jupyter"
     restart: unless-stopped
 
   gurum:
@@ -42,11 +43,37 @@ services:
       - "traefik.http.routers.ow.tls=true"
       - "traefik.http.routers.ow.tls.certresolver=myresolver"
       - "traefik.http.routers.ow.service=ow"
-      - "traefik.http.services.ow.loadbalancer.server.port=3000"     
+      - "traefik.http.services.ow.loadbalancer.server.port=3000"
     restart: unless-stopped
     volumes:
       - "${PWD}:/workspace"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "jupyter:/workspace/.jupyter"
+
+  crafty:
+    container_name: crafty
+    image: registry.gitlab.com/crafty-controller/crafty-4:latest
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.crafty.rule=Host(`crafty.atrawog.org`)"
+      - "traefik.http.routers.crafty.entrypoints=websecure"
+      - "traefik.http.routers.crafty.tls=true"
+      - "traefik.http.routers.crafty.tls.certresolver=myresolver"
+      - "traefik.http.services.crafty.loadbalancer.server.port=8443"
+    environment:
+      - TZ=Etc/UTC
+    ports:
+      - "8123:8123"
+      - "8443:8443"
+      - "19132:19132/udp"
+      - "25500-25600:25500-25600"
+    volumes:
+      - /crafty/backups:/crafty/backups
+      - /crafty/logs:/crafty/logs
+      - /crafty/servers:/crafty/servers
+      - /crafty/config:/crafty/app/config
+      - /crafty/import:/crafty/import
 
 volumes:
   letsencrypt:
